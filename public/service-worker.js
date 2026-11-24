@@ -50,3 +50,12 @@ self.addEventListener('fetch', (event) => {
     })(),
   );
 });
+
+// Let the client request immediate activation only after the user confirms the
+// update prompt. The page reload closes the old client, so the waiting worker
+// can take over without interrupting an in-flight wallet transaction (#552).
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
